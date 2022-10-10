@@ -65,7 +65,7 @@ extension ConstraintBuilder {
         leadingPriority: UILayoutPriority = .required,
         trailingPriority: UILayoutPriority = .required,
         bottomPriority: UILayoutPriority = .required
-    ) {
+    ) -> ConstraintBuilder {
         top(constant.top, priority: topPriority)
             .leading(constant.left, priority: leadingPriority)
             .trailing(-constant.right, priority: trailingPriority)
