@@ -25,6 +25,10 @@ extension UILayoutGuide: Anchorable {}
 extension UIView: BaselineAnchorable {}
 
 extension Anchorable {
+    public var sizeAnchor: SizeLayoutDimension {
+        .init(width: widthAnchor, height: heightAnchor)
+    }
+
     /// Allows you to do some additional layout/styling within an `AutoLayoutBuilder` block.
     /// Useful for adding arranged subviews to a stackView for example.
     public func configure(_ work: (Self) -> Void) -> Constrainable {
