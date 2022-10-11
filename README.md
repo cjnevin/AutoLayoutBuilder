@@ -17,7 +17,7 @@ Insert subview at a particular index and apply constraints.
 
 ```swift
 insertSubview(subview, at: 0) {
-    $0.edges().equalToSuperview()
+  $0.edges().equalToSuperview()
 }
 ```
 
@@ -27,7 +27,7 @@ This will not add your view to the view hierarchy. Useful for views already adde
 
 ```swift
 subview.constraints {
-    $0.edges().equalToSuperview()
+  $0.edges().equalToSuperview()
 }
 ```
 
@@ -70,7 +70,7 @@ addSubview(flexibleRectangularView) {
   $0.height(equalTo: 30)
 }
 
-// floating 30x30 subview hanging off left side of existing subview
+// floating 44x44 subview hanging off left side of existing subview
 addSubview(floatingButton) {
   $0.top().equalTo(myOtherSubview)
   $0.trailing(20).equalTo(myOtherSubview.leading)
@@ -80,5 +80,20 @@ addSubview(floatingButton) {
 // view with same size and position as another view
 addSubview(overlaidView) {
   $0.size().center().equalTo(otherView)
+}
+
+// using operators
+addSubview(leftView) {
+  $0.top().leading().bottom() == Superview()
+  $0.width(multiplier: 0.2) <= Superview()
+}
+addSubview(rightView) {
+  $0.top().bottom().size() == leftView
+  $0.trailing() == Superview()
+}
+addSubview(middleView) {
+  $0.top().bottom() == leftView
+  $0.leading(20) >= leftView.trailingAnchor
+  $0.trailing(20) <= rightView.leadingAnchor
 }
 ```
