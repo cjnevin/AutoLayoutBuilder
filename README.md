@@ -76,13 +76,13 @@ In this scenario, you might instead consider doing something like:
 
 ```swift
 addSubviews(leftView, middleView, rightView) { leftView, middleView, rightView in
-    leftView.verticalEdges().leading().equalToSuperview()
+  leftView.verticalEdges().leading().equalToSuperview()
 
-    middleView.verticalEdges().equalToSuperview()
-    middleView.leading(20).greaterThanOrEqualTo(leftView.trailingAnchor)
-    middleView.trailing(-20).lessThanOrEqualTo(rightView.leadingAnchor)
+  middleView.verticalEdges().equalToSuperview()
+  middleView.leading(20).greaterThanOrEqualTo(leftView.trailingAnchor)
+  middleView.trailing(-20).lessThanOrEqualTo(rightView.leadingAnchor)
 
-    rightView.verticalEdges().trailing().equalToSuperview()
+  rightView.verticalEdges().trailing().equalToSuperview()
 }
 ```
 
@@ -119,22 +119,20 @@ addSubview(overlaidView) {
   $0.size().center().equalTo(otherView)
 }
 
-// using operators
-addSubview(leftView) {
-  $0.top().leading().bottom() == Superview()
-  $0.width(multiplier: 0.2) <= Superview()
-}
-addSubview(rightView) {
-  $0.top().bottom().size() == leftView
-  $0.trailing() == Superview()
-}
-addSubview(middleView) {
-  $0.top().bottom() == leftView
-  $0.leading(20) >= leftView.trailingAnchor
-  $0.trailing(20) <= rightView.leadingAnchor
-}
+// centered button
 addSubview(floatingView) {
   $0.sizeAnchor == 44
   $0.center() == Superview()
+}
+
+// relative constraints using operators
+addSubviews(leftView, middleView, rightView) { leftView, middleView, rightView in
+  leftView.verticalEdges().leading() == self
+
+  middleView.verticalEdges() == self
+  middleView.leading(20) >= leftView.trailingAnchor
+  middleView.trailing(-20) <= rightView.leadingAnchor
+
+  rightView.verticalEdges().trailing() == self
 }
 ```
