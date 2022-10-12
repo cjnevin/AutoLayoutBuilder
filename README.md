@@ -96,4 +96,8 @@ addSubview(middleView) {
   $0.leading(20) >= leftView.trailingAnchor
   $0.trailing(20) <= rightView.leadingAnchor
 }
+addSubview(floatingView) {
+  $0.sizeAnchor == 44
+  $0.center() == Superview()
+}
 ```
