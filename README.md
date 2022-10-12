@@ -114,7 +114,7 @@ If you need to store a single constraint but want all of the code in one block:
 
 ```swift
 addSubview(button) {
-  $0.store(\.width, in: &widthConstraint) {
+  $0.store(.width, in: &widthConstraint) {
     $0.top().leading() == self
     $0.heightAnchor == 50
     $0.widthAnchor == 50
