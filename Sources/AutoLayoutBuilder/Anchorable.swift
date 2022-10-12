@@ -34,12 +34,24 @@ extension Anchorable {
     public func configure(_ work: (Self) -> Void) -> Constrainable {
         Configure(self, work: work)
     }
+
+    /// Allows for collection of several constraints useful for then storing them using `store(in: &...)` functions.
+    public func collect(@AutoLayoutBuilder work: (Self) -> Constrainable) -> Constrainable {
+        Collect(self, work: work)
+    }
 }
 
 private struct Configure: Constrainable {
     let constraints: [NSLayoutConstraint] = []
     init<T>(_ object: T, work: (T) -> Void) {
         work(object)
+    }
+}
+
+private struct Collect: Constrainable {
+    let constraints: [NSLayoutConstraint]
+    init<T>(_ object: T, @AutoLayoutBuilder work: (T) -> Constrainable) {
+        constraints = work(object).constraints
     }
 }
 

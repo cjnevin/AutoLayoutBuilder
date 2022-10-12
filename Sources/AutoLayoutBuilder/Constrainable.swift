@@ -14,6 +14,21 @@ extension Array: Constrainable where Element == NSLayoutConstraint {
     public var constraints: [NSLayoutConstraint] { self }
 }
 
+// MARK: - Storage
+
+extension NSLayoutConstraint {
+    /// Allows for the storage of `NSLayoutConstraint?` inside of `AutoLayoutBuilder` `@resultBuilder` blocks.
+    /// ```
+    /// addSubview(subView) {
+    ///     $0.width(equalTo: 50).store(in: &optionalWidthAnchor)
+    /// }
+    /// ```
+    @discardableResult public func store(in output: inout NSLayoutConstraint?) -> NSLayoutConstraint {
+        output = self
+        return self
+    }
+}
+
 extension Constrainable {
     /// Allows for the storage of `[NSLayoutConstraint]` inside of `AutoLayoutBuilder` `@resultBuilder` blocks.
     /// ```
@@ -21,16 +36,26 @@ extension Constrainable {
     ///     $0.edges().equalToSuperview().store(in: &subViewEdgeConstraints)
     /// }
     /// ```
-    @discardableResult public func store(in output: inout Self) -> Self {
-        output = self
+    public func store(in output: inout [NSLayoutConstraint]) -> Self {
+        output = constraints
         return self
     }
 
-    @discardableResult private func withEach(_ function: (NSLayoutConstraint) -> Void) -> Self {
-        constraints.forEach(function)
+    /// Allows for the storage of `NSLayoutConstraint?` inside of `AutoLayoutBuilder` `@resultBuilder` blocks.
+    /// ```
+    /// addSubview(subView) {
+    ///     $0.leading().trailing().top().equalToSuperview().store(.leading, in: &optionalLeadingConstraint)
+    /// }
+    /// ```
+    public func store(_ attribute: NSLayoutConstraint.Attribute, in output: inout NSLayoutConstraint?) -> Self {
+        output = constraints.first { $0.firstAttribute == attribute }
         return self
     }
+}
 
+// MARK: - Update Constraints
+
+extension Constrainable {
     /// Update a specific constraint.
     @discardableResult public func constraint(for attribute: NSLayoutConstraint.Attribute, update: (NSLayoutConstraint) -> Void) -> Self {
         for constraint in constraints where constraint.firstAttribute == attribute {
@@ -76,7 +101,11 @@ extension Constrainable {
         updateConstant(for: .width, update: size.width)
         return updateConstant(for: .height, update: size.height)
     }
+}
 
+// MARK: - Activate/Deactivate
+
+extension Constrainable {
     /// Activate all constraints.
     @discardableResult public func activate() -> Self {
         NSLayoutConstraint.activate(constraints)
