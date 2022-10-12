@@ -43,6 +43,11 @@ public func == (lhs: NSLayoutDimension, rhs: CGFloat) -> NSLayoutConstraint {
     lhs.constraint(equalToConstant: rhs)
 }
 
+// centerXAnchor == containerView.centerXAnchor
+public func == <T: AnyObject>(lhs: NSLayoutAnchor<T>, rhs: NSLayoutAnchor<T>) -> NSLayoutConstraint {
+    lhs.constraint(equalTo: rhs)
+}
+
 // sizeAnchor == CGSize(width: 50, height: 50)
 public func == (lhs: SizeLayoutDimension, rhs: CGSize) -> [NSLayoutConstraint] {
     [lhs.width.constraint(equalToConstant: rhs.width), lhs.height.constraint(equalToConstant: rhs.height)]
@@ -85,6 +90,11 @@ public func <= (lhs: NSLayoutDimension, rhs: CGFloat) -> NSLayoutConstraint {
     lhs.constraint(lessThanOrEqualToConstant: rhs)
 }
 
+// trailingAnchor <= containerView.trailingAnchor
+public func <= <T: AnyObject>(lhs: NSLayoutAnchor<T>, rhs: NSLayoutAnchor<T>) -> NSLayoutConstraint {
+    lhs.constraint(lessThanOrEqualTo: rhs)
+}
+
 // sizeAnchor <= CGSize(width: 50, height: 50)
 public func <= (lhs: SizeLayoutDimension, rhs: CGSize) -> [NSLayoutConstraint] {
     [lhs.width.constraint(lessThanOrEqualToConstant: rhs.width), lhs.height.constraint(lessThanOrEqualToConstant: rhs.height)]
@@ -125,6 +135,11 @@ public func >= (lhs: ConstraintBuilder, rhs: Anchorable) -> [NSLayoutConstraint]
 // widthAnchor >= 50
 public func >= (lhs: NSLayoutDimension, rhs: CGFloat) -> NSLayoutConstraint {
     lhs.constraint(greaterThanOrEqualToConstant: rhs)
+}
+
+// leadingAnchor >= containerView.leadingAnchor
+public func >= <T: AnyObject>(lhs: NSLayoutAnchor<T>, rhs: NSLayoutAnchor<T>) -> NSLayoutConstraint {
+    lhs.constraint(lessThanOrEqualTo: rhs)
 }
 
 // sizeAnchor >= CGSize(width: 50, height: 50)

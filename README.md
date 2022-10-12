@@ -49,9 +49,46 @@ addSubview(scrollView) {
 }
 ```
 
+## Relative Constraints
+
+If you have several views all being added to the same superview you may have three separate blocks:
+
+```swift
+addSubview(leftView) {
+  $0.verticalEdges().leading().equalToSuperview()
+}
+addSubview(rightView) {
+  $0.verticalEdges().trailing().equalToSuperview()
+}
+addSubview(middleView) {
+  $0.verticalEdges().equalToSuperview()
+  $0.leading(20).greaterThanOrEqualTo(leftView.trailingAnchor)
+  $0.trailing(-20).lessThanOrEqualTo(rightView.leadingAnchor)
+}
+
+```
+
+There is a slight readability issue here in that we need to add `leftView` and `rightView` before we can configure `middleView` as it relies on both of them. 
+
+If we were to move this code around and put `rightView` under `middleView` it would no longer run without crashing because `rightView` isn't added to the view at the time `middleView` is laying out.
+
+In this scenario, you might instead consider doing something like:
+
+```swift
+addSubviews(leftView, middleView, rightView) { leftView, middleView, rightView in
+    leftView.verticalEdges().leading().equalToSuperview()
+
+    middleView.verticalEdges().equalToSuperview()
+    middleView.leading(20).greaterThanOrEqualTo(leftView.trailingAnchor)
+    middleView.trailing(-20).lessThanOrEqualTo(rightView.leadingAnchor)
+
+    rightView.verticalEdges().trailing().equalToSuperview()
+}
+```
+
 ---
 
-## More Complex Examples
+## Other Examples
 
 ```swift
 // view with custom insets inside superview
