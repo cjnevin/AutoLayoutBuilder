@@ -86,6 +86,42 @@ addSubviews(leftView, middleView, rightView) { leftView, middleView, rightView i
 }
 ```
 
+## Storage
+
+If you need to store an array of constraints:
+
+```swift
+addSubview(insetView) {
+  $0.store(in: &edgeConstraints) {
+    $0.verticalEdges(20).horizontalEdges(10) == self
+  }
+}
+```
+
+If you need to store a single constraint (note this will take 'first' if you provide more than one):
+
+```swift
+addSubview(button) {
+  $0.top().leading() == self
+  $0.heightAnchor == 50
+  $0.store(in: &widthConstraint) {
+    $0.widthAnchor == 50
+  }
+}
+```
+
+If you need to store a single constraint but want all of the code in one block:
+
+```swift
+addSubview(button) {
+  $0.store(\.width, in: &widthConstraint) {
+    $0.top().leading() == self
+    $0.heightAnchor == 50
+    $0.widthAnchor == 50
+  }
+}
+```
+
 ---
 
 ## Other Examples
