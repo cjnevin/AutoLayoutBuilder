@@ -3,26 +3,26 @@
 import UIKit
 
 public protocol ConstraintBuilding {
-    public func buildXAxis(
+    func buildXAxis(
         _ anchor: KeyPath<Anchorable, NSLayoutXAxisAnchor>,
         constant: CGFloat,
         priority: UILayoutPriority
     ) -> ConstraintBuilder
 
-    public func buildYAxis(
+    func buildYAxis(
         _ anchor: KeyPath<Anchorable, NSLayoutYAxisAnchor>,
         constant: CGFloat,
         priority: UILayoutPriority
     ) -> ConstraintBuilder
 
-    public func buildDimension(
+    func buildDimension(
         _ anchor: KeyPath<Anchorable, NSLayoutDimension>,
         constant: CGFloat,
         multiplier: CGFloat,
         priority: UILayoutPriority
     ) -> ConstraintBuilder
 
-    public func buildBaseline(
+    func buildBaseline(
         _ anchor: KeyPath<BaselineAnchorable, NSLayoutYAxisAnchor>,
         constant: CGFloat,
         priority: UILayoutPriority
