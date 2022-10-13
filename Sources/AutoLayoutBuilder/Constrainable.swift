@@ -17,6 +17,11 @@ extension Array: Constrainable where Element == NSLayoutConstraint {
 // MARK: - Update Constraints
 
 extension Constrainable {
+    @discardableResult private func withEach(_ function: (NSLayoutConstraint) -> Void) -> Self {
+        constraints.forEach(function)
+        return self
+    }
+
     /// Update a specific constraint.
     @discardableResult public func constraint(for attribute: NSLayoutConstraint.Attribute, update: (NSLayoutConstraint) -> Void) -> Self {
         for constraint in constraints where constraint.firstAttribute == attribute {
