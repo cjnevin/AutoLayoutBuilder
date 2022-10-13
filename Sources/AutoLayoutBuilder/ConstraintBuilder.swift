@@ -49,7 +49,7 @@ private extension NSLayoutDimension {
     }
 }
 
-struct ConstraintBuilder: ConstraintBuilding {
+public struct ConstraintBuilder: ConstraintBuilding {
     let view: Anchorable
 
     private let anchorableBlock: (NSLayoutConstraint.Relation, Anchorable) -> [NSLayoutConstraint]
