@@ -7,7 +7,7 @@ Add subview on top of view hierarchy and apply constraints.
 ```swift
 // view pinned to superview
 addSubview(subview) {
-  $0.edges().equalToSuperview()
+  $0.edges == Superview()
 }
 ```
 
@@ -17,7 +17,7 @@ Insert subview at a particular index and apply constraints.
 
 ```swift
 insertSubview(subview, at: 0) {
-  $0.edges().equalToSuperview()
+  $0.edges == Superview()
 }
 ```
 
@@ -27,7 +27,7 @@ This will not add your view to the view hierarchy. Useful for views already adde
 
 ```swift
 subview.constraints {
-  $0.edges().equalToSuperview()
+  $0.edges == Superview()
 }
 ```
 
@@ -37,10 +37,10 @@ You can nest calls inside any of the above blocks as long as you return a `Const
 
 ```swift
 addSubview(scrollView) {
-  $0.edges().equalToSuperview()
+  $0.edges == Superview()
   $0.addSubview(stackView) {
-    $0.edges().equalToSuperview()
-    $0.width().equalTo(widthAnchor)
+    $0.edges == Superview()
+    $0.width == widthAnchor
     $0.configure {
       $0.addArrangedSubviews([redView, greenView])
       $0.setCustomSpacing(10, after: redView)
@@ -55,15 +55,15 @@ If you have several views all being added to the same superview you may have thr
 
 ```swift
 addSubview(leftView) {
-  $0.verticalEdges().leading().equalToSuperview()
+  $0.verticalEdges.leading == Superview()
 }
 addSubview(rightView) {
-  $0.verticalEdges().trailing().equalToSuperview()
+  $0.verticalEdges.trailing == Superview()
 }
 addSubview(middleView) {
-  $0.verticalEdges().equalToSuperview()
-  $0.leading(20).greaterThanOrEqualTo(leftView.trailingAnchor)
-  $0.trailing(-20).lessThanOrEqualTo(rightView.leadingAnchor)
+  $0.verticalEdges == Superview()
+  $0.leading(20) >= leftView.trailingAnchor
+  $0.trailing(-20) <= rightView.leadingAnchor
 }
 
 ```
@@ -76,13 +76,13 @@ In this scenario, you might instead consider doing something like:
 
 ```swift
 addSubviews(leftView, middleView, rightView) { leftView, middleView, rightView in
-  leftView.verticalEdges().leading().equalToSuperview()
+  leftView.verticalEdges.leading == Superview()
 
-  middleView.verticalEdges().equalToSuperview()
-  middleView.leading(20).greaterThanOrEqualTo(leftView.trailingAnchor)
-  middleView.trailing(-20).lessThanOrEqualTo(rightView.leadingAnchor)
+  middleView.verticalEdges == Superview()
+  middleView.leading(20) >= leftView.trailingAnchor
+  middleView.trailing(-20) <= rightView.leadingAnchor
 
-  rightView.verticalEdges().trailing().equalToSuperview()
+  rightView.verticalEdges.trailing == Superview()
 }
 ```
 
@@ -102,7 +102,7 @@ If you need to store a single constraint (note this will take 'first' if you pro
 
 ```swift
 addSubview(button) {
-  $0.top().leading() == self
+  $0.top.leading == self
   $0.heightAnchor == 50
   $0.store(in: &widthConstraint) {
     $0.widthAnchor == 50
@@ -115,7 +115,7 @@ If you need to store a single constraint but want all of the code in one block:
 ```swift
 addSubview(button) {
   $0.store(.width, in: &widthConstraint) {
-    $0.top().leading() == self
+    $0.top.leading == self
     $0.heightAnchor == 50
     $0.widthAnchor == 50
   }
@@ -129,46 +129,29 @@ addSubview(button) {
 ```swift
 // view with custom insets inside superview
 addSubview(insetView) {
-  $0.leading(10).trailing(-10).top(20).bottom(-20).equalToSuperview()
+  $0.leading(10).trailing(-10).top(20).bottom(-20) == Superview()
 }
 
 // view inset 10 from each edge of safe area
 addSubview(flexibleView) {
-  $0.edges(10, trailingPriority: .notRequired).equalTo(safeAreaLayoutGuide)
+  $0.edges(10, trailingPriority: .notRequired) == safeAreaLayoutGuide
 }
 
 // 60x30 rectangle with flexible width
 addSubview(flexibleRectangularView) {
-  $0.width(lessThanOrEqualTo: 60)
-  $0.height(equalTo: 30)
+  $0.widthAnchor <= 60
+  $0.heightAnchor == 30
 }
 
 // floating 44x44 subview hanging off left side of existing subview
 addSubview(floatingButton) {
-  $0.top().equalTo(myOtherSubview)
-  $0.trailing(20).equalTo(myOtherSubview.leading)
-  $0.size(equalTo: 44)
+  $0.top == myOtherSubview
+  $0.trailing(20) == myOtherSubview.leading
+  $0.sizeAnchor == 44
 }
 
 // view with same size and position as another view
 addSubview(overlaidView) {
-  $0.size().center().equalTo(otherView)
-}
-
-// centered button
-addSubview(floatingView) {
-  $0.sizeAnchor == 44
-  $0.center() == Superview()
-}
-
-// relative constraints using operators
-addSubviews(leftView, middleView, rightView) { leftView, middleView, rightView in
-  leftView.verticalEdges().leading() == self
-
-  middleView.verticalEdges() == self
-  middleView.leading(20) >= leftView.trailingAnchor
-  middleView.trailing(-20) <= rightView.leadingAnchor
-
-  rightView.verticalEdges().trailing() == self
+  $0.size.center == otherView
 }
 ```

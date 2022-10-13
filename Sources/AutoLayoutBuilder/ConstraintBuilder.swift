@@ -49,14 +49,31 @@ private extension NSLayoutDimension {
     }
 }
 
-public struct ConstraintBuilder {
+struct ConstraintBuilder: ConstraintBuilding {
     let view: Anchorable
 
     private let anchorableBlock: (NSLayoutConstraint.Relation, Anchorable) -> [NSLayoutConstraint]
     private let xAxisBlock: (NSLayoutConstraint.Relation, NSLayoutXAxisAnchor) -> [NSLayoutConstraint]
-    private let yAxisBlock: (NSLayoutConstraint.Relation,NSLayoutYAxisAnchor) -> [NSLayoutConstraint]
-    private let dimensionBlock: (NSLayoutConstraint.Relation,NSLayoutDimension) -> [NSLayoutConstraint]
+    private let yAxisBlock: (NSLayoutConstraint.Relation, NSLayoutYAxisAnchor) -> [NSLayoutConstraint]
+    private let dimensionBlock: (NSLayoutConstraint.Relation, NSLayoutDimension) -> [NSLayoutConstraint]
     private let superviewBlock: (NSLayoutConstraint.Relation) -> [NSLayoutConstraint]
+
+    public func buildXAxis(_ anchor: KeyPath<Anchorable, NSLayoutXAxisAnchor>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
+        combine(with: view.buildXAxis(anchor, constant: constant, priority: priority))
+    }
+
+    public func buildYAxis(_ anchor: KeyPath<Anchorable, NSLayoutYAxisAnchor>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
+        combine(with: view.buildYAxis(anchor, constant: constant, priority: priority))
+    }
+
+    public func buildDimension(_ anchor: KeyPath<Anchorable, NSLayoutDimension>, constant: CGFloat, multiplier: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
+        combine(with: view.buildDimension(anchor, constant: constant, multiplier: multiplier, priority: priority))
+    }
+
+    public func buildBaseline(_ anchor: KeyPath<BaselineAnchorable, NSLayoutYAxisAnchor>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
+        assert(view is BaselineAnchorable, "Setting baseline on a layoutGuide is not possible.")
+        return combine(with: view.buildBaseline(anchor, constant: constant, priority: priority))
+    }
 
     /// Constraint(s) equal to another view or layout guide for the same `KeyPath`.
     public func equalTo(_ otherView: Anchorable) -> [NSLayoutConstraint] {
