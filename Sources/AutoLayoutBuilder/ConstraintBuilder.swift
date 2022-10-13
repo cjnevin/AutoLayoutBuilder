@@ -53,24 +53,24 @@ public struct ConstraintBuilder: ConstraintBuilding {
     let view: Anchorable
 
     private let anchorableBlock: (NSLayoutConstraint.Relation, Anchorable) -> [NSLayoutConstraint]
-    private let xAxisBlock: (NSLayoutConstraint.Relation, NSLayoutXAxisAnchor) -> [NSLayoutConstraint]
-    private let yAxisBlock: (NSLayoutConstraint.Relation, NSLayoutYAxisAnchor) -> [NSLayoutConstraint]
-    private let dimensionBlock: (NSLayoutConstraint.Relation, NSLayoutDimension) -> [NSLayoutConstraint]
+    private let xAxisBlock: (NSLayoutConstraint.Relation, Anchor<NSLayoutXAxisAnchor>) -> [NSLayoutConstraint]
+    private let yAxisBlock: (NSLayoutConstraint.Relation, Anchor<NSLayoutYAxisAnchor>) -> [NSLayoutConstraint]
+    private let dimensionBlock: (NSLayoutConstraint.Relation, Anchor<NSLayoutDimension>) -> [NSLayoutConstraint]
     private let superviewBlock: (NSLayoutConstraint.Relation) -> [NSLayoutConstraint]
 
-    public func buildXAxis(_ anchor: KeyPath<Anchorable, NSLayoutXAxisAnchor>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
+    public func buildXAxis(_ anchor: KeyPath<Anchorable, Anchor<NSLayoutXAxisAnchor>>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
         combine(with: view.buildXAxis(anchor, constant: constant, priority: priority))
     }
 
-    public func buildYAxis(_ anchor: KeyPath<Anchorable, NSLayoutYAxisAnchor>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
+    public func buildYAxis(_ anchor: KeyPath<Anchorable, Anchor<NSLayoutYAxisAnchor>>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
         combine(with: view.buildYAxis(anchor, constant: constant, priority: priority))
     }
 
-    public func buildDimension(_ anchor: KeyPath<Anchorable, NSLayoutDimension>, constant: CGFloat, multiplier: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
+    public func buildDimension(_ anchor: KeyPath<Anchorable, Anchor<NSLayoutDimension>>, constant: CGFloat, multiplier: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
         combine(with: view.buildDimension(anchor, constant: constant, multiplier: multiplier, priority: priority))
     }
 
-    public func buildBaseline(_ anchor: KeyPath<BaselineAnchorable, NSLayoutYAxisAnchor>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
+    public func buildBaseline(_ anchor: KeyPath<BaselineAnchorable, Anchor<NSLayoutYAxisAnchor>>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
         assert(view is BaselineAnchorable, "Setting baseline on a layoutGuide is not possible.")
         return combine(with: view.buildBaseline(anchor, constant: constant, priority: priority))
     }
@@ -81,17 +81,17 @@ public struct ConstraintBuilder: ConstraintBuilding {
     }
 
     /// Constraint(s) equal to another X anchor.
-    public func equalTo(_ otherAnchor: NSLayoutXAxisAnchor) -> [NSLayoutConstraint] {
+    public func equalTo(_ otherAnchor: Anchor<NSLayoutXAxisAnchor>) -> [NSLayoutConstraint] {
         xAxisBlock(.equal, otherAnchor)
     }
 
     /// Constraint(s) equal to another Y anchor.
-    public func equalTo(_ otherAnchor: NSLayoutYAxisAnchor) -> [NSLayoutConstraint] {
+    public func equalTo(_ otherAnchor: Anchor<NSLayoutYAxisAnchor>) -> [NSLayoutConstraint] {
         yAxisBlock(.equal, otherAnchor)
     }
 
     /// Constraint(s) equal to another dimension.
-    public func equalTo(_ otherAnchor: NSLayoutDimension) -> [NSLayoutConstraint] {
+    public func equalTo(_ otherAnchor: Anchor<NSLayoutDimension>) -> [NSLayoutConstraint] {
         dimensionBlock(.equal, otherAnchor)
     }
 
@@ -106,17 +106,17 @@ public struct ConstraintBuilder: ConstraintBuilding {
     }
 
     /// Constraint(s) less than or equal to another X anchor.
-    public func lessThanOrEqualTo(_ otherAnchor: NSLayoutXAxisAnchor) -> [NSLayoutConstraint] {
+    public func lessThanOrEqualTo(_ otherAnchor: Anchor<NSLayoutXAxisAnchor>) -> [NSLayoutConstraint] {
         xAxisBlock(.lessThanOrEqual, otherAnchor)
     }
 
     /// Constraint(s) less than or equal to another Y anchor.
-    public func lessThanOrEqualTo(_ otherAnchor: NSLayoutYAxisAnchor) -> [NSLayoutConstraint] {
+    public func lessThanOrEqualTo(_ otherAnchor: Anchor<NSLayoutYAxisAnchor>) -> [NSLayoutConstraint] {
         yAxisBlock(.lessThanOrEqual, otherAnchor)
     }
 
     /// Constraint(s) less than or equal to another dimension.
-    public func lessThanOrEqualTo(_ otherAnchor: NSLayoutDimension) -> [NSLayoutConstraint] {
+    public func lessThanOrEqualTo(_ otherAnchor: Anchor<NSLayoutDimension>) -> [NSLayoutConstraint] {
         dimensionBlock(.lessThanOrEqual, otherAnchor)
     }
 
@@ -131,17 +131,17 @@ public struct ConstraintBuilder: ConstraintBuilding {
     }
 
     /// Constraint(s) greater than or equal to another X anchor.
-    public func greaterThanOrEqualTo(_ otherAnchor: NSLayoutXAxisAnchor) -> [NSLayoutConstraint] {
+    public func greaterThanOrEqualTo(_ otherAnchor: Anchor<NSLayoutXAxisAnchor>) -> [NSLayoutConstraint] {
         xAxisBlock(.greaterThanOrEqual, otherAnchor)
     }
 
     /// Constraint(s) greater than or equal to another Y anchor.
-    public func greaterThanOrEqualTo(_ otherAnchor: NSLayoutYAxisAnchor) -> [NSLayoutConstraint] {
+    public func greaterThanOrEqualTo(_ otherAnchor: Anchor<NSLayoutYAxisAnchor>) -> [NSLayoutConstraint] {
         yAxisBlock(.greaterThanOrEqual, otherAnchor)
     }
 
     /// Constraint(s) greater than or equal to another dimension.
-    public func greaterThanOrEqualTo(_ otherAnchor: NSLayoutDimension) -> [NSLayoutConstraint] {
+    public func greaterThanOrEqualTo(_ otherAnchor: Anchor<NSLayoutDimension>) -> [NSLayoutConstraint] {
         dimensionBlock(.greaterThanOrEqual, otherAnchor)
     }
 
@@ -177,52 +177,52 @@ public struct ConstraintBuilder: ConstraintBuilding {
 extension ConstraintBuilder {
     public init(
         view: Anchorable,
-        keyPath: KeyPath<Anchorable, NSLayoutXAxisAnchor>,
+        keyPath: KeyPath<Anchorable, Anchor<NSLayoutXAxisAnchor>>,
         constant: CGFloat = 0,
         priority: UILayoutPriority = .required
     ) {
         var uiView: UIView? { view as? UIView }
         var superview: UIView? { uiView?.superview }
-        let anchor = view[keyPath: keyPath]
+        let anchor = view[keyPath: keyPath].anchor
 
         self.view = view
 
         anchorableBlock = { relation, otherAnchorable in
-            [anchor.constraint(relation, to: otherAnchorable[keyPath: keyPath], constant: constant, priority: priority)]
+            [anchor.constraint(relation, to: otherAnchorable[keyPath: keyPath].anchor, constant: constant, priority: priority)]
         }
         xAxisBlock = { relation, otherAnchor in
-            [anchor.constraint(relation, to: otherAnchor, constant: constant, priority: priority)]
+            [anchor.constraint(relation, to: otherAnchor.anchor, constant: constant, priority: priority)]
         }
         yAxisBlock = { _, _ in [] }
         dimensionBlock = { _, _ in [] }
         superviewBlock = { relation in
-            superview.map { anchor.constraint(relation, to: $0[keyPath: keyPath], constant: constant, priority: priority) }.array
+            superview.map { anchor.constraint(relation, to: $0[keyPath: keyPath].anchor, constant: constant, priority: priority) }.array
         }
         uiView?.translatesAutoresizingMaskIntoConstraints = false
     }
 
     public init(
         view: Anchorable,
-        keyPath: KeyPath<Anchorable, NSLayoutYAxisAnchor>,
+        keyPath: KeyPath<Anchorable, Anchor<NSLayoutYAxisAnchor>>,
         constant: CGFloat = 0,
         priority: UILayoutPriority = .required
     ) {
         var uiView: UIView? { view as? UIView }
         var superview: UIView? { uiView?.superview }
-        let anchor = view[keyPath: keyPath]
+        let anchor = view[keyPath: keyPath].anchor
 
         self.view = view
 
         anchorableBlock = { relation, otherAnchorable in
-            [anchor.constraint(relation, to: otherAnchorable[keyPath: keyPath], constant: constant, priority: priority)]
+            [anchor.constraint(relation, to: otherAnchorable[keyPath: keyPath].anchor, constant: constant, priority: priority)]
         }
         xAxisBlock = { _, _ in [] }
         yAxisBlock = { relation, otherAnchor in
-            [anchor.constraint(relation, to: otherAnchor, constant: constant, priority: priority)]
+            [anchor.constraint(relation, to: otherAnchor.anchor, constant: constant, priority: priority)]
         }
         dimensionBlock = { _, _ in [] }
         superviewBlock = { relation in
-            superview.map { anchor.constraint(relation, to: $0[keyPath: keyPath], constant: constant, priority: priority) }.array
+            superview.map { anchor.constraint(relation, to: $0[keyPath: keyPath].anchor, constant: constant, priority: priority) }.array
         }
 
         uiView?.translatesAutoresizingMaskIntoConstraints = false
@@ -230,28 +230,28 @@ extension ConstraintBuilder {
 
     public init(
         view: BaselineAnchorable,
-        keyPath: KeyPath<BaselineAnchorable, NSLayoutYAxisAnchor>,
+        keyPath: KeyPath<BaselineAnchorable, Anchor<NSLayoutYAxisAnchor>>,
         constant: CGFloat = 0,
         priority: UILayoutPriority = .required
     ) {
         var uiView: UIView? { view as? UIView }
         var superview: UIView? { uiView?.superview }
-        let anchor = view[keyPath: keyPath]
+        let anchor = view[keyPath: keyPath].anchor
 
         self.view = view
 
         anchorableBlock = { relation, otherAnchorable in
             (otherAnchorable as? BaselineAnchorable).map {
-                anchor.constraint(relation, to: $0[keyPath: keyPath], constant: constant, priority: priority)
+                anchor.constraint(relation, to: $0[keyPath: keyPath].anchor, constant: constant, priority: priority)
             }.array
         }
         xAxisBlock = { _, _ in [] }
         yAxisBlock = { relation, otherAnchor in
-            [anchor.constraint(relation, to: otherAnchor, constant: constant, priority: priority)]
+            [anchor.constraint(relation, to: otherAnchor.anchor, constant: constant, priority: priority)]
         }
         dimensionBlock = { _, _ in [] }
         superviewBlock = { relation in
-            superview.map { anchor.constraint(relation, to: $0[keyPath: keyPath], constant: constant, priority: priority) }.array
+            superview.map { anchor.constraint(relation, to: $0[keyPath: keyPath].anchor, constant: constant, priority: priority) }.array
         }
 
         uiView?.translatesAutoresizingMaskIntoConstraints = false
@@ -259,31 +259,32 @@ extension ConstraintBuilder {
 
     public init(
         view: Anchorable,
-        keyPath: KeyPath<Anchorable, NSLayoutDimension>,
+        keyPath: KeyPath<Anchorable, Anchor<NSLayoutDimension>>,
         constant: CGFloat = 0,
         multiplier: CGFloat = 1,
         priority: UILayoutPriority = .required
     ) {
         var uiView: UIView? { view as? UIView }
         var superview: UIView? { uiView?.superview }
-        let anchor = view[keyPath: keyPath]
+        let dimension = view[keyPath: keyPath].dimension
 
         self.view = view
 
         anchorableBlock = { relation, otherAnchorable in
-            [anchor.constraint(relation, to: otherAnchorable[keyPath: keyPath], constant: constant, priority: priority)]
+            [dimension.constraint(relation, to: otherAnchorable[keyPath: keyPath].dimension, constant: constant, priority: priority)]
         }
         xAxisBlock = { _, _ in [] }
         yAxisBlock = { _, _ in [] }
         dimensionBlock = { relation, otherAnchor in
-            [anchor.constraint(relation, to: otherAnchor, constant: constant, multiplier: multiplier, priority: priority)]
+            [dimension.constraint(relation, to: otherAnchor.dimension, constant: constant, multiplier: multiplier, priority: priority)]
         }
         superviewBlock = { relation in
-            superview.map { anchor.constraint(relation, to: $0[keyPath: keyPath], constant: constant, priority: priority) }.array
+            superview.map { dimension.constraint(relation, to: $0[keyPath: keyPath].dimension, constant: constant, priority: priority) }.array
         }
         uiView?.translatesAutoresizingMaskIntoConstraints = false
     }
 }
+
 
 private extension Optional {
     var array: [Wrapped] {

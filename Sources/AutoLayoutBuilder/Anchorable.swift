@@ -16,49 +16,77 @@ public protocol Anchorable: AnyObject, ConstraintBuilding {
 }
 
 public protocol BaselineAnchorable: Anchorable {
-    var lastBaselineAnchor: NSLayoutYAxisAnchor { get }
     var firstBaselineAnchor: NSLayoutYAxisAnchor { get }
+    var lastBaselineAnchor: NSLayoutYAxisAnchor { get }
+}
+
+public struct Anchor<T: AnyObject> {
+    let anchor: NSLayoutAnchor<T>
+}
+
+extension Anchor where T == NSLayoutDimension {
+    var dimension: NSLayoutDimension {
+        anchor as! NSLayoutDimension
+    }
+}
+
+extension Anchorable {
+    public var left: Anchor<NSLayoutXAxisAnchor> { .init(anchor: leftAnchor) }
+    public var right: Anchor<NSLayoutXAxisAnchor> { .init(anchor: rightAnchor) }
+    public var leading: Anchor<NSLayoutXAxisAnchor> { .init(anchor: leadingAnchor) }
+    public var trailing: Anchor<NSLayoutXAxisAnchor> { .init(anchor: trailingAnchor) }
+    public var top: Anchor<NSLayoutYAxisAnchor> { .init(anchor: topAnchor) }
+    public var bottom: Anchor<NSLayoutYAxisAnchor> { .init(anchor: bottomAnchor) }
+    public var width: Anchor<NSLayoutDimension> { .init(anchor: widthAnchor) }
+    public var height: Anchor<NSLayoutDimension> { .init(anchor: heightAnchor) }
+    public var centerX: Anchor<NSLayoutXAxisAnchor> { .init(anchor: centerXAnchor) }
+    public var centerY: Anchor<NSLayoutYAxisAnchor> { .init(anchor: centerYAnchor) }
+}
+
+extension BaselineAnchorable {
+    public var firstBaseline: Anchor<NSLayoutYAxisAnchor> { .init(anchor: firstBaselineAnchor) }
+    public var lastBaseline: Anchor<NSLayoutYAxisAnchor> { .init(anchor: lastBaselineAnchor) }
 }
 
 extension UILayoutGuide: Anchorable {
-    public func buildXAxis(_ anchor: KeyPath<Anchorable, NSLayoutXAxisAnchor>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
+    public func buildXAxis(_ anchor: KeyPath<Anchorable, Anchor<NSLayoutXAxisAnchor>>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
         .init(view: self, keyPath: anchor, constant: constant, priority: priority)
     }
 
-    public func buildYAxis(_ anchor: KeyPath<Anchorable, NSLayoutYAxisAnchor>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
+    public func buildYAxis(_ anchor: KeyPath<Anchorable, Anchor<NSLayoutYAxisAnchor>>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
         .init(view: self, keyPath: anchor, constant: constant, priority: priority)
     }
 
-    public func buildDimension(_ anchor: KeyPath<Anchorable, NSLayoutDimension>, constant: CGFloat, multiplier: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
+    public func buildDimension(_ anchor: KeyPath<Anchorable, Anchor<NSLayoutDimension>>, constant: CGFloat, multiplier: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
         .init(view: self, keyPath: anchor, constant: constant, multiplier: multiplier, priority: priority)
     }
 
-    public func buildBaseline(_ anchor: KeyPath<BaselineAnchorable, NSLayoutYAxisAnchor>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
+    public func buildBaseline(_ anchor: KeyPath<BaselineAnchorable, Anchor<NSLayoutYAxisAnchor>>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
         fatalError("Setting baseline on a layoutGuide is not possible.")
     }
 }
 
 extension UIView: BaselineAnchorable {
-    public func buildXAxis(_ anchor: KeyPath<Anchorable, NSLayoutXAxisAnchor>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
+    public func buildXAxis(_ anchor: KeyPath<Anchorable, Anchor<NSLayoutXAxisAnchor>>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
         .init(view: self, keyPath: anchor, constant: constant, priority: priority)
     }
 
-    public func buildYAxis(_ anchor: KeyPath<Anchorable, NSLayoutYAxisAnchor>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
+    public func buildYAxis(_ anchor: KeyPath<Anchorable, Anchor<NSLayoutYAxisAnchor>>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
         .init(view: self, keyPath: anchor, constant: constant, priority: priority)
     }
 
-    public func buildDimension(_ anchor: KeyPath<Anchorable, NSLayoutDimension>, constant: CGFloat, multiplier: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
+    public func buildDimension(_ anchor: KeyPath<Anchorable, Anchor<NSLayoutDimension>>, constant: CGFloat, multiplier: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
         .init(view: self, keyPath: anchor, constant: constant, multiplier: multiplier, priority: priority)
     }
 
-    public func buildBaseline(_ anchor: KeyPath<BaselineAnchorable, NSLayoutYAxisAnchor>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
+    public func buildBaseline(_ anchor: KeyPath<BaselineAnchorable, Anchor<NSLayoutYAxisAnchor>>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
         .init(view: self, keyPath: anchor, constant: constant, priority: priority)
     }
 }
 
 extension Anchorable {
-    public var sizeAnchor: SizeLayoutDimension {
-        .init(width: widthAnchor, height: heightAnchor)
+    public var size: SizeLayoutDimension {
+        .init(width: width, height: height)
     }
 
     /// Allows you to do some additional layout/styling within an `AutoLayoutBuilder` block.
@@ -67,7 +95,8 @@ extension Anchorable {
         Configure(self, work: work)
     }
 
-    /// Allows for collection of several constraints useful for then storing them using `store(in: &...)` functions.
+    /// Useful when you want to store multiple constraints with different `equalTo` configurations (i.e. `lessThan`, `greaterThan` or pointing at a different `Anchorable`).
+    /// Typically, you collect the constraints to do something with the result, such as `store(in: &...)`.
     public func collect(@AutoLayoutBuilder work: (Self) -> Constrainable) -> Constrainable {
         Collect(self, work: work)
     }
@@ -76,7 +105,7 @@ extension Anchorable {
     /// ```
     /// addSubview(subView) {
     ///     $0.store(in: &edgeConstraints) {
-    ///         $0.edges() == self
+    ///         $0.edges == self
     ///     }
     /// }
     /// ```
@@ -89,8 +118,8 @@ extension Anchorable {
     /// Allows for the storage of `NSLayoutConstraint?` inside of `AutoLayoutBuilder` `@resultBuilder` blocks.
     /// ```
     /// addSubview(subView) {
-    ///     $0.store(in: &optionalWidthAnchor) {
-    ///         $0.widthAnchor == 50
+    ///     $0.store(in: &widthConstraint) {
+    ///         $0.width == 50
     ///     }
     /// }
     /// ```
@@ -103,15 +132,30 @@ extension Anchorable {
     /// Allows for the storage of `NSLayoutConstraint?` inside of `AutoLayoutBuilder` `@resultBuilder` blocks.
     /// ```
     /// addSubview(subView) {
-    ///     $0.store(\.width, in: &optionalWidthAnchor) {
-    ///         $0.leading().verticalEdges() == self
-    ///         $0.widthAnchor == 50
+    ///     $0.store(.width, in: &widthConstraint) {
+    ///         $0.leading.verticalEdges == self
+    ///         $0.width == 50
     ///     }
     /// }
     /// ```
     public func store(_ attribute: NSLayoutConstraint.Attribute, in output: inout NSLayoutConstraint?, @AutoLayoutBuilder work: (Self) -> Constrainable) -> Constrainable {
         let collected = Collect(self, work: work)
         output = collected.constraints.first { $0.firstAttribute == attribute }
+        return collected
+    }
+
+    /// Allows for the storage of `[NSLayoutConstraint]` inside of `AutoLayoutBuilder` `@resultBuilder` blocks.
+    /// ```
+    /// addSubview(subView) {
+    ///     $0.store([.top, .bottom], in: &verticalConstraints) {
+    ///         $0.leading.verticalEdges == self
+    ///         $0.width == 50
+    ///     }
+    /// }
+    /// ```
+    public func store(_ attributes: [NSLayoutConstraint.Attribute], in output: inout [NSLayoutConstraint], @AutoLayoutBuilder work: (Self) -> Constrainable) -> Constrainable {
+        let collected = Collect(self, work: work)
+        output = collected.constraints.filter { attributes.contains($0.firstAttribute) }
         return collected
     }
 }
