@@ -40,7 +40,7 @@ addSubview(scrollView) {
   $0.edges == Superview()
   $0.addSubview(stackView) {
     $0.edges == Superview()
-    $0.width == widthAnchor
+    $0.width == width
     $0.configure {
       $0.addArrangedSubviews([redView, greenView])
       $0.setCustomSpacing(10, after: redView)
@@ -62,8 +62,8 @@ addSubview(rightView) {
 }
 addSubview(middleView) {
   $0.verticalEdges == Superview()
-  $0.leading(20) >= leftView.trailingAnchor
-  $0.trailing(-20) <= rightView.leadingAnchor
+  $0.leading(20) >= leftView.trailing
+  $0.trailing(-20) <= rightView.leading
 }
 
 ```
@@ -79,8 +79,8 @@ addSubviews(leftView, middleView, rightView) { leftView, middleView, rightView i
   leftView.verticalEdges.leading == Superview()
 
   middleView.verticalEdges == Superview()
-  middleView.leading(20) >= leftView.trailingAnchor
-  middleView.trailing(-20) <= rightView.leadingAnchor
+  middleView.leading(20) >= leftView.trailing
+  middleView.trailing(-20) <= rightView.leading
 
   rightView.verticalEdges.trailing == Superview()
 }
@@ -103,9 +103,9 @@ If you need to store a single constraint (note this will take 'first' if you pro
 ```swift
 addSubview(button) {
   $0.top.leading == self
-  $0.heightAnchor == 50
+  $0.height == 50
   $0.store(in: &widthConstraint) {
-    $0.widthAnchor == 50
+    $0.width == 50
   }
 }
 ```
@@ -116,8 +116,7 @@ If you need to store a single constraint but want all of the code in one block:
 addSubview(button) {
   $0.store(.width, in: &widthConstraint) {
     $0.top.leading == self
-    $0.heightAnchor == 50
-    $0.widthAnchor == 50
+    $0.size == 50
   }
 }
 ```
@@ -139,15 +138,15 @@ addSubview(flexibleView) {
 
 // 60x30 rectangle with flexible width
 addSubview(flexibleRectangularView) {
-  $0.widthAnchor <= 60
-  $0.heightAnchor == 30
+  $0.width <= 60
+  $0.height == 30
 }
 
 // floating 44x44 subview hanging off left side of existing subview
 addSubview(floatingButton) {
   $0.top == myOtherSubview
   $0.trailing(20) == myOtherSubview.leading
-  $0.sizeAnchor == 44
+  $0.size == 44
 }
 
 // view with same size and position as another view
