@@ -3,36 +3,23 @@
 import UIKit
 
 public protocol ConstraintBuilding {
-    func buildXAxis(
-        _ anchor: KeyPath<Anchorable, Anchor<NSLayoutXAxisAnchor>>,
-        constant: CGFloat,
-        priority: UILayoutPriority
-    ) -> ConstraintBuilder
-
-    func buildYAxis(
-        _ anchor: KeyPath<Anchorable, Anchor<NSLayoutYAxisAnchor>>,
-        constant: CGFloat,
-        priority: UILayoutPriority
-    ) -> ConstraintBuilder
-
-    func buildDimension(
-        _ anchor: KeyPath<Anchorable, Anchor<NSLayoutDimension>>,
+    var anchorable: Anchorable { get }
+    func build(
+        _ anchor: Anchor,
         constant: CGFloat,
         multiplier: CGFloat,
-        priority: UILayoutPriority
-    ) -> ConstraintBuilder
-
-    func buildBaseline(
-        _ anchor: KeyPath<BaselineAnchorable, Anchor<NSLayoutYAxisAnchor>>,
-        constant: CGFloat,
         priority: UILayoutPriority
     ) -> ConstraintBuilder
 }
 
 extension ConstraintBuilding {
+    private func anchor(_ attribute: NSLayoutConstraint.Attribute) -> Anchor {
+        anchorable.anchor(attribute)
+    }
+
     /// Create builder for `left` constraint.
     public func left(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        buildXAxis(\.left, constant: constant, priority: priority)
+        build(anchor(.left), constant: constant, multiplier: 1, priority: priority)
     }
 
     /// Create builder for `left` constraint.
@@ -41,7 +28,7 @@ extension ConstraintBuilding {
     /// Create builder for `right` constraint.
     /// You are responsible for passing in a positive/negative value.
     public func right(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        buildXAxis(\.right, constant: constant, priority: priority)
+        build(anchor(.right), constant: constant, multiplier: 1, priority: priority)
     }
 
     /// Create builder for `right` constraint.
@@ -49,7 +36,7 @@ extension ConstraintBuilding {
 
     /// Create builder for `leading` constraint.
     public func leading(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        buildXAxis(\.leading, constant: constant, priority: priority)
+        build(anchor(.leading), constant: constant, multiplier: 1, priority: priority)
     }
 
     /// Create builder for `leading` constraint.
@@ -58,7 +45,7 @@ extension ConstraintBuilding {
     /// Create builder for `trailing` constraint.
     /// You are responsible for passing in a positive/negative value.
     public func trailing(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        buildXAxis(\.trailing, constant: constant, priority: priority)
+        build(anchor(.trailing), constant: constant, multiplier: 1, priority: priority)
     }
 
     /// Create builder for `trailing` constraint.
@@ -66,7 +53,7 @@ extension ConstraintBuilding {
 
     /// Create builder for `top` constraint.
     public func top(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        buildYAxis(\.top, constant: constant, priority: priority)
+        build(anchor(.top), constant: constant, multiplier: 1, priority: priority)
     }
 
     /// Create builder for `top` constraint.
@@ -75,7 +62,7 @@ extension ConstraintBuilding {
     /// Create builder for `bottom` constraint.
     /// You are responsible for passing in a positive/negative value.
     public func bottom(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        buildYAxis(\.bottom, constant: constant, priority: priority)
+        build(anchor(.bottom), constant: constant, multiplier: 1, priority: priority)
     }
 
     /// Create builder for `bottom` constraint.
@@ -83,7 +70,7 @@ extension ConstraintBuilding {
 
     /// Create builder for `centerX` constraint.
     public func centerX(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        buildXAxis(\.centerX, constant: constant, priority: priority)
+        build(anchor(.centerX), constant: constant, multiplier: 1, priority: priority)
     }
 
     /// Create builder for `centerX` constraint.
@@ -91,15 +78,31 @@ extension ConstraintBuilding {
 
     /// Create builder for `centerY` constraint.
     public func centerY(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        buildYAxis(\.centerY, constant: constant, priority: priority)
+        build(anchor(.centerY), constant: constant, multiplier: 1, priority: priority)
     }
 
     /// Create builder for `centerY` constraint.
     public var centerY: ConstraintBuilder { centerY() }
 
+    /// Create builder for `firstBaseline` constraint.
+    public func firstBaseline(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
+        build(anchor(.firstBaseline), constant: constant, multiplier: 1, priority: priority)
+    }
+
+    /// Create builder for `firstBaseline` constraint.
+    public var firstBaseline: ConstraintBuilder { firstBaseline() }
+
+    /// Create builder for `lastBaseline` constraint.
+    public func lastBaseline(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
+        build(anchor(.lastBaseline), constant: constant, multiplier: 1, priority: priority)
+    }
+
+    /// Create builder for `lastBaseline` constraint.
+    public var lastBaseline: ConstraintBuilder { lastBaseline() }
+
     /// Create builder for `width` constraint.
     public func width(_ constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        buildDimension(\.width, constant: constant, multiplier: multiplier, priority: priority)
+        build(anchor(.width), constant: constant, multiplier: multiplier, priority: priority)
     }
 
     /// Create builder for `width` constraint.
@@ -107,7 +110,7 @@ extension ConstraintBuilding {
 
     /// Create builder for `height` constraint.
     public func height(_ constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        buildDimension(\.height, constant: constant, multiplier: multiplier, priority: priority)
+        build(anchor(.height), constant: constant, multiplier: multiplier, priority: priority)
     }
 
     /// Create builder for `height` constraint.
@@ -234,24 +237,6 @@ extension ConstraintBuilding {
 
     /// Create builder for `width` and `height` constraints.
     public var size: ConstraintBuilder { size() }
-}
-
-extension ConstraintBuilding where Self: BaselineAnchorable {
-    /// Create builder for `firstBaseline` constraint.
-    public func firstBaseline(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        buildBaseline(\.firstBaseline, constant: constant, priority: priority)
-    }
-
-    /// Create builder for `firstBaseline` constraint.
-    public var firstBaseline: ConstraintBuilder { firstBaseline() }
-
-    /// Create builder for `lastBaseline` constraint.
-    public func lastBaseline(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        buildBaseline(\.lastBaseline, constant: constant, priority: priority)
-    }
-
-    /// Create builder for `lastBaseline` constraint.
-    public var lastBaseline: ConstraintBuilder { lastBaseline() }
 }
 
 #endif

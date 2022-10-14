@@ -2,90 +2,58 @@
 
 import UIKit
 
-public protocol Anchorable: AnyObject, ConstraintBuilding {
-    var leftAnchor: NSLayoutXAxisAnchor { get }
-    var rightAnchor: NSLayoutXAxisAnchor { get }
-    var leadingAnchor: NSLayoutXAxisAnchor { get }
-    var trailingAnchor: NSLayoutXAxisAnchor { get }
-    var topAnchor: NSLayoutYAxisAnchor { get }
-    var bottomAnchor: NSLayoutYAxisAnchor { get }
-    var widthAnchor: NSLayoutDimension { get }
-    var heightAnchor: NSLayoutDimension { get }
-    var centerXAnchor: NSLayoutXAxisAnchor { get }
-    var centerYAnchor: NSLayoutYAxisAnchor { get }
-}
+public protocol Anchorable: AnyObject, ConstraintBuilding {}
 
-public protocol BaselineAnchorable: Anchorable {
-    var firstBaselineAnchor: NSLayoutYAxisAnchor { get }
-    var lastBaselineAnchor: NSLayoutYAxisAnchor { get }
-}
-
-public struct Anchor<T: AnyObject> {
-    let anchor: NSLayoutAnchor<T>
-}
-
-extension Anchor where T == NSLayoutDimension {
-    var dimension: NSLayoutDimension {
-        anchor as! NSLayoutDimension
-    }
-}
+public protocol BaselineAnchorable: Anchorable {}
 
 extension Anchorable {
-    public var left: Anchor<NSLayoutXAxisAnchor> { .init(anchor: leftAnchor) }
-    public var right: Anchor<NSLayoutXAxisAnchor> { .init(anchor: rightAnchor) }
-    public var leading: Anchor<NSLayoutXAxisAnchor> { .init(anchor: leadingAnchor) }
-    public var trailing: Anchor<NSLayoutXAxisAnchor> { .init(anchor: trailingAnchor) }
-    public var top: Anchor<NSLayoutYAxisAnchor> { .init(anchor: topAnchor) }
-    public var bottom: Anchor<NSLayoutYAxisAnchor> { .init(anchor: bottomAnchor) }
-    public var width: Anchor<NSLayoutDimension> { .init(anchor: widthAnchor) }
-    public var height: Anchor<NSLayoutDimension> { .init(anchor: heightAnchor) }
-    public var centerX: Anchor<NSLayoutXAxisAnchor> { .init(anchor: centerXAnchor) }
-    public var centerY: Anchor<NSLayoutYAxisAnchor> { .init(anchor: centerYAnchor) }
+    func anchor(_ attribute: NSLayoutConstraint.Attribute) -> Anchor {
+        .init(anchorable: self, attribute: attribute)
+    }
+
+    public var left: Anchor { anchor(.left) }
+    public var right: Anchor { anchor(.right) }
+    public var leading: Anchor { anchor(.leading) }
+    public var trailing: Anchor { anchor(.trailing) }
+    public var top: Anchor { anchor(.top) }
+    public var bottom: Anchor { anchor(.bottom) }
+    public var width: Anchor { anchor(.width) }
+    public var height: Anchor { anchor(.height) }
+    public var centerX: Anchor { anchor(.centerX) }
+    public var centerY: Anchor { anchor(.centerY) }
 }
 
 extension BaselineAnchorable {
-    public var firstBaseline: Anchor<NSLayoutYAxisAnchor> { .init(anchor: firstBaselineAnchor) }
-    public var lastBaseline: Anchor<NSLayoutYAxisAnchor> { .init(anchor: lastBaselineAnchor) }
+    public var firstBaseline: Anchor { anchor(.firstBaseline) }
+    public var lastBaseline: Anchor { anchor(.lastBaseline) }
 }
 
 extension UILayoutGuide: Anchorable {
-    public func buildXAxis(_ anchor: KeyPath<Anchorable, Anchor<NSLayoutXAxisAnchor>>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
-        .init(view: self, keyPath: anchor, constant: constant, priority: priority)
-    }
-
-    public func buildYAxis(_ anchor: KeyPath<Anchorable, Anchor<NSLayoutYAxisAnchor>>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
-        .init(view: self, keyPath: anchor, constant: constant, priority: priority)
-    }
-
-    public func buildDimension(_ anchor: KeyPath<Anchorable, Anchor<NSLayoutDimension>>, constant: CGFloat, multiplier: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
-        .init(view: self, keyPath: anchor, constant: constant, multiplier: multiplier, priority: priority)
-    }
-
-    public func buildBaseline(_ anchor: KeyPath<BaselineAnchorable, Anchor<NSLayoutYAxisAnchor>>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
-        fatalError("Setting baseline on a layoutGuide is not possible.")
+    public var anchorable: Anchorable { self }
+    public func build(_ anchor: Anchor, constant: CGFloat, multiplier: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
+        .init(
+            anchor: anchor,
+            constant: constant,
+            multiplier: multiplier,
+            priority: priority
+        )
     }
 }
 
 extension UIView: BaselineAnchorable {
-    public func buildXAxis(_ anchor: KeyPath<Anchorable, Anchor<NSLayoutXAxisAnchor>>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
-        .init(view: self, keyPath: anchor, constant: constant, priority: priority)
-    }
-
-    public func buildYAxis(_ anchor: KeyPath<Anchorable, Anchor<NSLayoutYAxisAnchor>>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
-        .init(view: self, keyPath: anchor, constant: constant, priority: priority)
-    }
-
-    public func buildDimension(_ anchor: KeyPath<Anchorable, Anchor<NSLayoutDimension>>, constant: CGFloat, multiplier: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
-        .init(view: self, keyPath: anchor, constant: constant, multiplier: multiplier, priority: priority)
-    }
-
-    public func buildBaseline(_ anchor: KeyPath<BaselineAnchorable, Anchor<NSLayoutYAxisAnchor>>, constant: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
-        .init(view: self, keyPath: anchor, constant: constant, priority: priority)
+    public var anchorable: Anchorable { self }
+    public func build(_ anchor: Anchor, constant: CGFloat, multiplier: CGFloat, priority: UILayoutPriority) -> ConstraintBuilder {
+        .init(
+            anchor: anchor,
+            constant: constant,
+            multiplier: multiplier,
+            priority: priority
+        )
     }
 }
 
 extension Anchorable {
-    public var size: SizeLayoutDimension {
+    public var size: SizeAnchor {
         .init(width: width, height: height)
     }
 

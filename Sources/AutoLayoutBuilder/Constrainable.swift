@@ -88,12 +88,12 @@ extension Constrainable {
 extension NSLayoutConstraint {
     /// @resultBuilder replacement for `NSLayoutConstraint.activate()`
     @discardableResult public static func activate(@AutoLayoutBuilder with constraints: () -> [Constrainable]) -> [Constrainable] {
-        constraints().flatMap { $0.activate() }
+        constraints().map { $0.activate() }
     }
 
     /// @resultBuilder replacement for `NSLayoutConstraint.deactivate()`
     @discardableResult public static func deactivate(@AutoLayoutBuilder with constraints: () -> [Constrainable]) -> [Constrainable] {
-        constraints().flatMap { $0.deactivate() }
+        constraints().map { $0.deactivate() }
     }
 }
 
