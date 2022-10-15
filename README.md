@@ -60,6 +60,19 @@ addSubview(ScrollableStackView {
 }.spacing(10, after: redView)) {
   $0.edges == Superview()
 }
+
+// Alternatively, if you need to store the stackView you could write it like this
+
+let stackView = ScrollableStackView()
+
+...
+
+addSubview(stackView.replaceStackedViews {
+  redView
+  greenView
+}.spacing(10, after: redView)) {
+  $0.edges == Superview()
+}
 ```
 
 By default it will be vertical but you can pass in the `axis` to flip it to horizontal, it will take care of the constraints for you.
