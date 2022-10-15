@@ -60,9 +60,11 @@ addSubview(ScrollableStackView {
 }.spacing(10, after: redView)) {
   $0.edges == Superview()
 }
+```
 
-// Alternatively, if you need to store the stackView you could write it like this
+Alternatively, if you need to store the stackView you could write it like this:
 
+```swift
 let stackView = ScrollableStackView()
 
 ...
