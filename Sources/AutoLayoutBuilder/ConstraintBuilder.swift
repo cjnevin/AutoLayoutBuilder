@@ -93,7 +93,7 @@ extension ConstraintBuilder {
                     to: .init(anchorable: rhs, attribute: lhs.attribute),
                     constant: constant,
                     multiplier: multiplier
-                )
+                ).updatePriority(priority)
             ]
         }
         anchorBlock = { relation, rhs in
@@ -103,7 +103,7 @@ extension ConstraintBuilder {
                     to: rhs,
                     constant: constant,
                     multiplier: multiplier
-                )
+                ).updatePriority(priority)
             ]
         }
         superviewBlock = { relation in
@@ -113,7 +113,7 @@ extension ConstraintBuilder {
                     to: .init(anchorable: rhs, attribute: lhs.attribute),
                     constant: constant,
                     multiplier: multiplier
-                )
+                ).updatePriority(priority)
             }.array
         }
         self.anchorable = lhs.anchorable

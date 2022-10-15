@@ -23,6 +23,23 @@ extension Constrainable {
     }
 
     /// Update a specific constraint.
+    @discardableResult public func constraint(for attribute: NSLayoutConstraint.Attribute, source: Anchorable, update: (NSLayoutConstraint) -> Void) -> Self {
+        for constraint in constraints where constraint.firstAttribute == attribute &&  constraint.firstItem === source {
+            update(constraint)
+        }
+        return self
+    }
+
+    /// Update a specific constraint.
+    @discardableResult public func replaceConstraint(for attribute: NSLayoutConstraint.Attribute, source: Anchorable, update: (NSLayoutConstraint, Anchorable) -> NSLayoutConstraint) -> Self {
+        for constraint in constraints where constraint.firstAttribute == attribute &&  constraint.firstItem === source {
+            constraint.deactivate()
+            update(constraint, source).activate()
+        }
+        return self
+    }
+
+    /// Update a specific constraint.
     @discardableResult public func constraint(for attribute: NSLayoutConstraint.Attribute, update: (NSLayoutConstraint) -> Void) -> Self {
         for constraint in constraints where constraint.firstAttribute == attribute {
             update(constraint)

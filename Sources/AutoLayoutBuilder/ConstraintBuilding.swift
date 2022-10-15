@@ -18,8 +18,8 @@ extension ConstraintBuilding {
     }
 
     /// Create builder for `left` constraint.
-    public func left(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        build(anchor(.left), constant: constant, multiplier: 1, priority: priority)
+    public func left(_ constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = .required) -> ConstraintBuilder {
+        build(anchor(.left), constant: constant, multiplier: multiplier, priority: priority)
     }
 
     /// Create builder for `left` constraint.
@@ -27,16 +27,16 @@ extension ConstraintBuilding {
 
     /// Create builder for `right` constraint.
     /// You are responsible for passing in a positive/negative value.
-    public func right(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        build(anchor(.right), constant: constant, multiplier: 1, priority: priority)
+    public func right(_ constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = .required) -> ConstraintBuilder {
+        build(anchor(.right), constant: constant, multiplier: multiplier, priority: priority)
     }
 
     /// Create builder for `right` constraint.
     public var right: ConstraintBuilder { right() }
 
     /// Create builder for `leading` constraint.
-    public func leading(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        build(anchor(.leading), constant: constant, multiplier: 1, priority: priority)
+    public func leading(_ constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = .required) -> ConstraintBuilder {
+        build(anchor(.leading), constant: constant, multiplier: multiplier, priority: priority)
     }
 
     /// Create builder for `leading` constraint.
@@ -44,16 +44,16 @@ extension ConstraintBuilding {
 
     /// Create builder for `trailing` constraint.
     /// You are responsible for passing in a positive/negative value.
-    public func trailing(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        build(anchor(.trailing), constant: constant, multiplier: 1, priority: priority)
+    public func trailing(_ constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = .required) -> ConstraintBuilder {
+        build(anchor(.trailing), constant: constant, multiplier: multiplier, priority: priority)
     }
 
     /// Create builder for `trailing` constraint.
     public var trailing: ConstraintBuilder { trailing() }
 
     /// Create builder for `top` constraint.
-    public func top(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        build(anchor(.top), constant: constant, multiplier: 1, priority: priority)
+    public func top(_ constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = .required) -> ConstraintBuilder {
+        build(anchor(.top), constant: constant, multiplier: multiplier, priority: priority)
     }
 
     /// Create builder for `top` constraint.
@@ -61,40 +61,40 @@ extension ConstraintBuilding {
 
     /// Create builder for `bottom` constraint.
     /// You are responsible for passing in a positive/negative value.
-    public func bottom(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        build(anchor(.bottom), constant: constant, multiplier: 1, priority: priority)
+    public func bottom(_ constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = .required) -> ConstraintBuilder {
+        build(anchor(.bottom), constant: constant, multiplier: multiplier, priority: priority)
     }
 
     /// Create builder for `bottom` constraint.
     public var bottom: ConstraintBuilder { bottom() }
 
     /// Create builder for `centerX` constraint.
-    public func centerX(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        build(anchor(.centerX), constant: constant, multiplier: 1, priority: priority)
+    public func centerX(_ constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = .required) -> ConstraintBuilder {
+        build(anchor(.centerX), constant: constant, multiplier: multiplier, priority: priority)
     }
 
     /// Create builder for `centerX` constraint.
     public var centerX: ConstraintBuilder { centerX() }
 
     /// Create builder for `centerY` constraint.
-    public func centerY(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        build(anchor(.centerY), constant: constant, multiplier: 1, priority: priority)
+    public func centerY(_ constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = .required) -> ConstraintBuilder {
+        build(anchor(.centerY), constant: constant, multiplier: multiplier, priority: priority)
     }
 
     /// Create builder for `centerY` constraint.
     public var centerY: ConstraintBuilder { centerY() }
 
     /// Create builder for `firstBaseline` constraint.
-    public func firstBaseline(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        build(anchor(.firstBaseline), constant: constant, multiplier: 1, priority: priority)
+    public func firstBaseline(_ constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = .required) -> ConstraintBuilder {
+        build(anchor(.firstBaseline), constant: constant, multiplier: multiplier, priority: priority)
     }
 
     /// Create builder for `firstBaseline` constraint.
     public var firstBaseline: ConstraintBuilder { firstBaseline() }
 
     /// Create builder for `lastBaseline` constraint.
-    public func lastBaseline(_ constant: CGFloat = 0, priority: UILayoutPriority = .required) -> ConstraintBuilder {
-        build(anchor(.lastBaseline), constant: constant, multiplier: 1, priority: priority)
+    public func lastBaseline(_ constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = .required) -> ConstraintBuilder {
+        build(anchor(.lastBaseline), constant: constant, multiplier: multiplier, priority: priority)
     }
 
     /// Create builder for `lastBaseline` constraint.
@@ -121,15 +121,16 @@ extension ConstraintBuilding {
     /// `bottom` value will be flipped to negative if `constant.bottom` is non-zero.
     public func edges(
         _ constant: UIEdgeInsets = .zero,
+        multiplier: CGFloat = 1,
         topPriority: UILayoutPriority = .required,
         leadingPriority: UILayoutPriority = .required,
         trailingPriority: UILayoutPriority = .required,
         bottomPriority: UILayoutPriority = .required
     ) -> ConstraintBuilder {
-        top(constant.top, priority: topPriority)
-            .leading(constant.left, priority: leadingPriority)
-            .trailing(-constant.right, priority: trailingPriority)
-            .bottom(-constant.bottom, priority: bottomPriority)
+        top(constant.top, multiplier: multiplier, priority: topPriority)
+            .leading(constant.left, multiplier: multiplier, priority: leadingPriority)
+            .trailing(-constant.right, multiplier: multiplier, priority: trailingPriority)
+            .bottom(-constant.bottom, multiplier: multiplier, priority: bottomPriority)
     }
 
     /// Create builder for `top`, `leading`, `trailing` and `bottom` constraints for `constant`.
@@ -137,10 +138,12 @@ extension ConstraintBuilding {
     /// `bottom` value will be flipped to negative if `constant.bottom` is non-zero.
     public func edges(
         _ constant: UIEdgeInsets = .zero,
+        multiplier: CGFloat = 1,
         allEdgePriorities: UILayoutPriority
     ) -> ConstraintBuilder {
         edges(
             constant,
+            multiplier: multiplier,
             topPriority: allEdgePriorities,
             leadingPriority: allEdgePriorities,
             trailingPriority: allEdgePriorities,
@@ -156,15 +159,16 @@ extension ConstraintBuilding {
     /// `bottom` value will be flipped to negative if `constant` is non-zero.
     public func edges(
         _ constant: CGFloat,
+        multiplier: CGFloat = 1,
         topPriority: UILayoutPriority = .required,
         leadingPriority: UILayoutPriority = .required,
         trailingPriority: UILayoutPriority = .required,
         bottomPriority: UILayoutPriority = .required
     ) -> ConstraintBuilder {
-        top(constant, priority: topPriority)
-            .leading(constant, priority: leadingPriority)
-            .trailing(-constant, priority: trailingPriority)
-            .bottom(-constant, priority: bottomPriority)
+        top(constant, multiplier: multiplier, priority: topPriority)
+            .leading(constant, multiplier: multiplier, priority: leadingPriority)
+            .trailing(-constant, multiplier: multiplier, priority: trailingPriority)
+            .bottom(-constant, multiplier: multiplier, priority: bottomPriority)
     }
 
     /// Create builder for `top`, `leading`, `trailing` and `bottom` constraints for `constant`.
@@ -172,10 +176,12 @@ extension ConstraintBuilding {
     /// `bottom` value will be flipped to negative if `constant` is non-zero.
     public func edges(
         _ constant: CGFloat,
+        multiplier: CGFloat = 1,
         allEdgePriorities: UILayoutPriority
     ) -> ConstraintBuilder {
         edges(
             constant,
+            multiplier: multiplier,
             topPriority: allEdgePriorities,
             leadingPriority: allEdgePriorities,
             trailingPriority: allEdgePriorities,
@@ -187,11 +193,12 @@ extension ConstraintBuilding {
     /// `trailing` value will be flipped to negative if `constant` is non-zero.
     public func horizontalEdges(
         _ constant: CGFloat = 0,
+        multiplier: CGFloat = 1,
         leadingPriority: UILayoutPriority = .required,
         trailingPriority: UILayoutPriority = .required
     ) -> ConstraintBuilder {
-        leading(constant, priority: leadingPriority)
-            .trailing(-constant, priority: trailingPriority)
+        leading(constant, multiplier: multiplier, priority: leadingPriority)
+            .trailing(-constant, multiplier: multiplier, priority: trailingPriority)
     }
 
     /// Create builder for `leading` and `trailing` constraints.
@@ -201,11 +208,12 @@ extension ConstraintBuilding {
     /// `bottom` value will be flipped to negative if `constant` is non-zero.
     public func verticalEdges(
         _ constant: CGFloat = 0,
+        multiplier: CGFloat = 1,
         topPriority: UILayoutPriority = .required,
         bottomPriority: UILayoutPriority = .required
     ) -> ConstraintBuilder {
-        top(constant, priority: topPriority)
-            .bottom(-constant, priority: bottomPriority)
+        top(constant, multiplier: multiplier, priority: topPriority)
+            .bottom(-constant, multiplier: multiplier, priority: bottomPriority)
     }
 
     /// Create builder for `top` and `bottom` constraints.
@@ -214,11 +222,12 @@ extension ConstraintBuilding {
     /// Create builder for `centerX` and `centerY` constraints.
     public func center(
         _ constant: CGPoint = .zero,
+        multiplier: CGFloat = 1,
         centerXPriority: UILayoutPriority = .required,
         centerYPriority: UILayoutPriority = .required
     ) -> ConstraintBuilder {
-        centerX(constant.x, priority: centerXPriority)
-            .centerY(constant.y, priority: centerYPriority)
+        centerX(constant.x, multiplier: multiplier, priority: centerXPriority)
+            .centerY(constant.y, multiplier: multiplier, priority: centerYPriority)
     }
 
     /// Create builder for `centerX` and `centerY` constraints.

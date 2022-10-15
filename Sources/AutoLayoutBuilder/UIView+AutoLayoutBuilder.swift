@@ -14,8 +14,10 @@ extension UIView {
 
     /// Add subview on top of view hierarchy and apply constraints.
     @discardableResult public func addSubview<View: UIView>(_ view: View, @AutoLayoutBuilder with makeConstraints: (View) -> [Constrainable]) -> [NSLayoutConstraint] {
-        addSubview(view)
-        return view.constraints(translatesAutoresizingMask: false, makeConstraints)
+        addAutoLayoutSubviews(view)
+        let constraints = makeConstraints(view).flatMap(\.constraints)
+        NSLayoutConstraint.activate(constraints)
+        return constraints
     }
 
     /// Add subviews on top of view hierarchy and apply constraints.

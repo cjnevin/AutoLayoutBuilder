@@ -4,15 +4,15 @@ import UIKit
 
 extension Anchorable {
     /// Constraints for right of `leading` and to left of `trailing`.
-    public func horizontallyBetween(_ leading: Anchorable, and trailing: Anchorable, spacing: CGFloat = 0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
-        (self.leading(spacing, priority: priority) == leading.trailing)
-        + (self.trailing(-spacing, priority: priority) == trailing.leading)
+    public func horizontallyBetween(_ leading: Anchorable, and trailing: Anchorable, spacing: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
+        (self.leading(spacing, multiplier: multiplier, priority: priority) == leading.trailing)
+        + (self.trailing(-spacing, multiplier: multiplier, priority: priority) == trailing.leading)
     }
 
     /// Constraints for bottom of `top` and to top of `bottom`.
     public func verticallyBetween(_ top: Anchorable, and bottom: Anchorable, spacing: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
-        (self.top(spacing, priority: priority) == top.bottom)
-        + (self.bottom(-spacing, priority: priority) == bottom.top)
+        (self.top(spacing, multiplier: multiplier, priority: priority) == top.bottom)
+        + (self.bottom(-spacing, multiplier: multiplier, priority: priority) == bottom.top)
     }
 
     /// Shortcut for `NSLayoutConstraint` which supports `priority`.
