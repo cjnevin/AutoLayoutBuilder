@@ -49,6 +49,23 @@ addSubview(scrollView) {
 }
 ```
 
+### StackViews
+
+There is actually a cleaner way of doing the above, it's called `ScrollableStackView` and you could write the above code as:
+
+```swift
+addSubview(ScrollableStackView {
+  redView
+  greenView
+}.spacing(10, after: redView)) {
+  $0.edges == Superview()
+}
+```
+
+By default it will be vertical but you can pass in the `axis` to flip it to horizontal, it will take care of the constraints for you.
+
+There is also a `StackView` component that works the same way but doesn't allow for scrolling.
+
 ## Relative Constraints
 
 If you have several views all being added to the same superview you may have three separate blocks:
