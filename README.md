@@ -54,32 +54,23 @@ addSubview(scrollView) {
 There is actually a cleaner way of doing the above, it's called `ScrollableStackView` and you could write the above code as:
 
 ```swift
-addSubview(ScrollableStackView {
-  redView
-  greenView
-}.spacing(10, after: redView)) {
+addSubview(ScrollableStackView()) {
   $0.edges == Superview()
+  $0.stackedViews {
+    redView
+    greenView
+  }
+  $0.spacing(10, after: redView)
 }
 ```
 
-Alternatively, if you need to store the stackView you could write it like this:
+There is an extension to this package for working with StackViews, located here: 
+https://github.com/cjnevin/StackViewBuilder
 
-```swift
-let stackView = ScrollableStackView()
+### TableViews
 
-...
-
-addSubview(stackView.replaceStackedViews {
-  redView
-  greenView
-}.spacing(10, after: redView)) {
-  $0.edges == Superview()
-}
-```
-
-By default it will be vertical but you can pass in the `axis` to flip it to horizontal, it will take care of the constraints for you.
-
-There is also a `StackView` component that works the same way but doesn't allow for scrolling.
+There is an extension to this package for working with TableViews, located here:
+https://github.com/cjnevin/TableViewBuilder
 
 ## Relative Constraints
 
