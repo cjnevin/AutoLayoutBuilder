@@ -160,7 +160,7 @@ addSubview(button) {
 ```swift
 // view with custom insets inside superview
 addSubview(insetView) {
-  $0.leading(10).trailing(-10).top(20).bottom(-20) == Superview()
+  $0.horizontalEdges(10).verticalEdges(20) == Superview()
 }
 
 // view inset 10 from each edge of safe area
