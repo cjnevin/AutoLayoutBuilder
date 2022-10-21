@@ -1,5 +1,3 @@
-#if canImport(UIKit)
-
 import UIKit
 
 public struct Superview {
@@ -125,5 +123,3 @@ public func >= (lhs: SizeAnchor, rhs: CGSize) -> [NSLayoutConstraint] {
 public func >= (lhs: SizeAnchor, rhs: CGFloat) -> [NSLayoutConstraint] {
     lhs >= CGSize(width: rhs, height: rhs)
 }
-
-#endif

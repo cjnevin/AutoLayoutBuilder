@@ -1,5 +1,3 @@
-#if canImport(UIKit)
-
 import UIKit
 
 public struct ConstraintBuilder: ConstraintBuilding {
@@ -127,5 +125,3 @@ private extension Optional {
         [self].compactMap { $0 }
     }
 }
-
-#endif

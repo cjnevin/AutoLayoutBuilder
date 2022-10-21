@@ -1,5 +1,3 @@
-#if canImport(UIKit)
-
 import UIKit
 
 public protocol Constrainable {
@@ -45,6 +43,24 @@ extension Constrainable {
             update(constraint)
         }
         return self
+    }
+
+    /// Update constant for a specific constraint.
+    @discardableResult public func updateMultiplier(for attribute: NSLayoutConstraint.Attribute, update: @autoclosure () -> CGFloat) -> Self {
+        constraint(for: attribute) { constraint in
+            constraint.deactivate()
+            constraint.firstItem.map {
+                NSLayoutConstraint(
+                    item: $0,
+                    attribute: constraint.firstAttribute,
+                    relatedBy: constraint.relation,
+                    toItem: constraint.secondItem,
+                    attribute: constraint.secondAttribute,
+                    multiplier: update(),
+                    constant: constraint.constant
+                )
+            }?.activate()
+        }
     }
 
     /// Update constant for a specific constraint.
@@ -113,5 +129,3 @@ extension NSLayoutConstraint {
         constraints().map { $0.deactivate() }
     }
 }
-
-#endif

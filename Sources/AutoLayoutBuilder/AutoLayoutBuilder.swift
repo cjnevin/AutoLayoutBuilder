@@ -1,5 +1,3 @@
-#if canImport(UIKit)
-
 import UIKit
 
 @resultBuilder
@@ -34,5 +32,3 @@ public enum AutoLayoutBuilder {
         components.flatMap(\.constraints)
     }
 }
-
-#endif

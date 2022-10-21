@@ -1,5 +1,3 @@
-#if canImport(UIKit)
-
 import UIKit
 
 extension Anchorable {
@@ -75,5 +73,3 @@ extension Anchorable {
         size >= constant
     }
 }
-
-#endif

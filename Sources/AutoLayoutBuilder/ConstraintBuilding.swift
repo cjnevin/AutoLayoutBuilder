@@ -1,5 +1,3 @@
-#if canImport(UIKit)
-
 import UIKit
 
 public protocol ConstraintBuilding {
@@ -247,5 +245,3 @@ extension ConstraintBuilding {
     /// Create builder for `width` and `height` constraints.
     public var size: ConstraintBuilder { size() }
 }
-
-#endif

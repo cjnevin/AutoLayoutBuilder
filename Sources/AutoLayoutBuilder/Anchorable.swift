@@ -1,5 +1,3 @@
-#if canImport(UIKit)
-
 import UIKit
 
 public protocol Anchorable: AnyObject, ConstraintBuilding {}
@@ -141,5 +139,3 @@ private struct Collect: Constrainable {
         constraints = work(object).constraints
     }
 }
-
-#endif

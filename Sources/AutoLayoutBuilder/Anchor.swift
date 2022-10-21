@@ -1,5 +1,3 @@
-#if canImport(UIKit)
-
 import UIKit
 
 public struct Anchor: CustomStringConvertible {
@@ -128,5 +126,3 @@ private let baselines: [NSLayoutConstraint.Attribute] = [
 private let dimensions: [NSLayoutConstraint.Attribute] = [
     .width, .height
 ]
-
-#endif
